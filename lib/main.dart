@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MyApp2());
 }
 
 class MyApp extends StatelessWidget {
@@ -24,8 +24,50 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Hello'),
     );
+  }
+}
+
+class MyApp2 extends StatefulWidget {
+  const MyApp2({super.key});
+
+  @override
+  State<MyApp2> createState() => _MyApp2State();
+
+  static _MyApp2State of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyApp2State>()!;
+}
+
+class _MyApp2State extends State<MyApp2> {
+  ThemeMode _themeMode = ThemeMode.system;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          // primarySwatch: Colors.blue,
+          ),
+      darkTheme: ThemeData.dark(),
+      themeMode: _themeMode,
+      home: const MyHomePage(title: 'Hello'),
+    );
+  }
+
+  void changeTheme(ThemeMode themeMode) {
+    setState(() {
+      _themeMode = themeMode;
+    });
   }
 }
 
@@ -101,6 +143,19 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
+            ),
+            const Text('Choose your theme:'),
+            ElevatedButton(
+              onPressed: () => MyApp2.of(context).changeTheme(ThemeMode.light),
+              child: const Text('Light'),
+            ),
+            ElevatedButton(
+              onPressed: () => MyApp2.of(context).changeTheme(ThemeMode.dark),
+              child: const Text('Dark'),
+            ),
+            ElevatedButton(
+              onPressed: () => MyApp2.of(context).changeTheme(ThemeMode.system),
+              child: const Text('System'),
             ),
           ],
         ),
