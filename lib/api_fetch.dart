@@ -100,15 +100,21 @@ class AnimeListUI extends StatefulWidget {
 }
 
 class _AnimeListUIState extends State<AnimeListUI> {
-  late Future<AnimeList> futureAnimeList;
+  // late Future<AnimeList> futureAnimeList;
   List animes = [];
   int offset = 0;
   int limit = 5;
+  bool hasNext = true;
+
+  void _fetchAnime(String type, int limit, int offset) async {
+    final response = await http.get(Uri.parse(
+        '$mainUrl/anime/ranking?offset=$offset&ranking_type=$type&limit=$limit'));
+  }
 
   void _loadMore() async {
     if (_controller.position.extentAfter < 300) {
       offset++;
-      futureAnimeList = fetchAnimeList("airing", limit, offset);
+      // futureAnimeList = fetchAnimeList("airing", limit, offset);
     }
   }
 
@@ -116,52 +122,38 @@ class _AnimeListUIState extends State<AnimeListUI> {
   @override
   void initState() {
     super.initState();
-    futureAnimeList = fetchAnimeList("airing", limit, offset);
-    final value = Future.value(futureAnimeList);
+    // futureAnimeList = fetchAnimeList("airing", limit, offset);
+    // animes.addAll(futureAnimeList);
+    // final value = Future.value(futureAnimeList);
     _controller = ScrollController()..addListener(_loadMore);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<AnimeList>(
-      future: futureAnimeList,
+    return FutureBuilder(
+      future: fetchAnimeList("airing", limit, offset),
       builder: (context, snapshot) {
         Size mediaSize = MediaQuery.of(context).size;
         // return Text(snapshot.toString());
         if (snapshot.hasData) {
           // print(snapshot.data!.data);
-          for (var item in snapshot.data!.data) {
-            return Column(
-              children: [
-                SizedBox(height: 10),
-                Image.network(
-                  item['node']['main_picture']['medium'],
-                  height: mediaSize.height * 0.2,
-                  width: mediaSize.width * 0.3,
-                ),
-                Text(item['node']['title']),
-              ],
-            );
-            // listViewChildren.add(Text(item['node']?['title']));
-            // listViewChildren
-            //     .add(Image.network(item['node']?['main_picture']?['medium']));
-            // return ListView(
-            //   children: [
-            //     Text(item['node']?['title']),
-            //     Image.network(item['node']?['main_picture']?['medium']),
-            //   ],
-            // );
-          }
+          return ListView.separated(
+            itemCount: animes.length,
+            itemBuilder: (context, index) {
+              return Container(
+                  width: mediaSize.width * 0.9,
+                  child: ListTile(
+                    title:
+                        Image.network(animes[index]['main_picture']['medium']),
+                    subtitle: Text(animes[index]['name']),
+                  ));
+            },
+            separatorBuilder: (context, index) => const Divider(),
+          );
         } else if (snapshot.hasError) {
           return Text('error: ${snapshot.error}');
         }
 
-        // return ListView.builder(
-        //   itemCount: listViewChildren.length,
-        //   itemBuilder: (context, index) => ListTile(
-        //     title: listViewChildren[2],
-        //   ),
-        // );
         return const CircularProgressIndicator();
       },
     );
