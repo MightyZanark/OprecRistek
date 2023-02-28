@@ -20,7 +20,14 @@ class _AnimeDetailState extends State<AnimeDetail> {
   late String mainPic;
   late String synopsis;
   late String startDate;
+  late String endDate;
+  late double mean;
+  late int rank;
+  late List genres;
+  late List studios;
   bool isLoading = false;
+  String genreString = "Genres: ";
+  String studioString = "Studios: ";
 
   Future fetchDetail() async {
     if (isLoading) return;
@@ -44,8 +51,23 @@ class _AnimeDetailState extends State<AnimeDetail> {
         details.addAll(json.decode(response.body));
         altTitles.addAll(details['alternative_titles']);
         mainPic = details['main_picture']['medium'];
-        synopsis = details['synopsis'];
+        synopsis = details['synopsis'].trim();
         startDate = details['start_date'];
+        endDate = details['end_date'] ?? "-";
+        mean = details['mean'];
+        rank = details['rank'];
+        genres = details['genres'];
+        studios = details['studios'];
+
+        for (int i = 0; i < genres.length; i++) {
+          genreString += genres[i]['name'];
+          if (i != genres.length - 1) genreString += ", ";
+        }
+
+        for (int i = 0; i < studios.length; i++) {
+          studioString += studios[i]['name'];
+          if (i != studios.length - 1) studioString += ", ";
+        }
       });
       // print(details['main_picture']['medium']);
     } else {
@@ -71,6 +93,7 @@ class _AnimeDetailState extends State<AnimeDetail> {
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,18 +107,18 @@ class _AnimeDetailState extends State<AnimeDetail> {
                       ),
                       Flexible(
                         child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: const EdgeInsets.symmetric(vertical: 8),
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
+                                    padding: const EdgeInsets.only(top: 0),
                                     child: Text(
                                       widget.animeName,
                                       style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold),
-                                      textScaleFactor: 0.7,
+                                      textScaleFactor: 0.75,
                                     ),
                                   ),
                                   Padding(
@@ -107,40 +130,76 @@ class _AnimeDetailState extends State<AnimeDetail> {
                                       "[JP] ${altTitles['ja']}",
                                       textAlign: TextAlign.start,
                                       style: const TextStyle(
-                                          fontSize: 14,
+                                          // fontSize: 14,
                                           fontWeight: FontWeight.w400),
-                                      textScaleFactor: 0.8,
+                                      textScaleFactor: 0.75,
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: Text("Score: ${details['mean']}"),
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: Text(
+                                      "Score: ${details['mean']}",
+                                      textScaleFactor: 0.9,
+                                    ),
                                   ),
                                   Padding(
                                       padding: const EdgeInsets.only(top: 5),
                                       child: Text(
-                                          "Overall Rank: ${details['rank']}")),
+                                        "Overall Rank: ${details['rank']}",
+                                        textScaleFactor: 0.9,
+                                      )),
                                   Padding(
                                       padding: const EdgeInsets.only(top: 5),
-                                      child: Text("Start date: $startDate")),
+                                      child: Text(
+                                        "Start date: $startDate",
+                                        textScaleFactor: 0.9,
+                                      )),
+                                  Padding(
+                                      padding: const EdgeInsets.only(top: 5),
+                                      child: Text(
+                                        "End date: $endDate",
+                                        textScaleFactor: 0.9,
+                                      )),
                                 ])),
                       ),
-                      // Flexible(
-                      //   child: Padding(
-                      //       padding: EdgeInsets.symmetric(vertical: 10),
-                      //       child: Text(
-                      //           "Alternative Names:\n  ${details['alternative_titles']['en']}\n  ${details['alternative_titles']['jp']}")),
-                      // ),
                     ],
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Text(
+                      "Synopsis",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
                   ),
                   Flexible(
                       child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 8),
-                          child: Text(
-                            "Synopsis:\n$synopsis",
-                            textScaleFactor: 1,
-                          )))
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                synopsis,
+                                textScaleFactor: 0.9,
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                genreString,
+                                textScaleFactor: 1,
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                studioString,
+                                textScaleFactor: 1,
+                              ),
+                            ],
+                          ))),
+                  // Flexible(
+                  //     child: Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 8),
+                  //   child: Text(genreString),
+                  // ))
                 ],
               ));
   }

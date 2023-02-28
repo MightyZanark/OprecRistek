@@ -129,7 +129,7 @@ class _AnimeListState extends State<AnimeList> {
                   style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black),
+                      color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
                 onTap: () => Navigator.of(context).push(MaterialPageRoute(
