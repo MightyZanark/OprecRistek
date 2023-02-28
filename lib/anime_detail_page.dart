@@ -33,7 +33,7 @@ class _AnimeDetailState extends State<AnimeDetail> {
 
     final url =
         Uri.parse("$mainUrl/anime/${widget.animeId}?fields=title,main_picture,"
-            "alternative_titles,start_date,synopsis,mean,rank,"
+            "alternative_titles,start_date,end_date,synopsis,mean,rank,"
             "genres,related_anime,studios");
 
     final response = await http.get(url, headers: header);
@@ -69,7 +69,7 @@ class _AnimeDetailState extends State<AnimeDetail> {
           title: Text(widget.animeName),
         ),
         body: isLoading
-            ? Center(child: CircularProgressIndicator())
+            ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
                   Row(
@@ -79,8 +79,6 @@ class _AnimeDetailState extends State<AnimeDetail> {
                         padding: const EdgeInsets.all(8.0),
                         child: Image.network(
                           mainPic,
-                          // height: 300,
-                          // width: 220,
                           scale: 1.5,
                         ),
                       ),
@@ -97,21 +95,34 @@ class _AnimeDetailState extends State<AnimeDetail> {
                                       style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold),
+                                      textScaleFactor: 0.7,
                                     ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 8.0),
                                     child: Text(
-                                      "Alternative Names:\n\t"
-                                      "${altTitles['en']}\n\t"
-                                      "${altTitles['ja']}",
+                                      "Alternative Names:\n"
+                                      "[EN] ${altTitles['en']}\n"
+                                      "[JP] ${altTitles['ja']}",
                                       textAlign: TextAlign.start,
                                       style: const TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w400),
+                                      textScaleFactor: 0.8,
                                     ),
-                                  )
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Text("Score: ${details['mean']}"),
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.only(top: 5),
+                                      child: Text(
+                                          "Overall Rank: ${details['rank']}")),
+                                  Padding(
+                                      padding: const EdgeInsets.only(top: 5),
+                                      child: Text("Start date: $startDate")),
                                 ])),
                       ),
                       // Flexible(
@@ -121,7 +132,15 @@ class _AnimeDetailState extends State<AnimeDetail> {
                       //           "Alternative Names:\n  ${details['alternative_titles']['en']}\n  ${details['alternative_titles']['jp']}")),
                       // ),
                     ],
-                  )
+                  ),
+                  Flexible(
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 8),
+                          child: Text(
+                            "Synopsis:\n$synopsis",
+                            textScaleFactor: 1,
+                          )))
                 ],
               ));
   }

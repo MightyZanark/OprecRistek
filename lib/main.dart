@@ -13,6 +13,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
+      // darkTheme: ThemeData.dark(),
+      // themeMode: ThemeMode.dark,
       home: AnimeList(),
     );
   }
