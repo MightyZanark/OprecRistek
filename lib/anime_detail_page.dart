@@ -16,9 +16,10 @@ class AnimeDetail extends StatefulWidget {
 
 class _AnimeDetailState extends State<AnimeDetail> {
   Map details = {};
-  String mainPic = "";
-  String synopsis = "";
-  String startDate = "";
+  Map altTitles = {};
+  late String mainPic;
+  late String synopsis;
+  late String startDate;
   bool isLoading = false;
 
   Future fetchDetail() async {
@@ -41,6 +42,7 @@ class _AnimeDetailState extends State<AnimeDetail> {
       setState(() {
         isLoading = false;
         details.addAll(json.decode(response.body));
+        altTitles.addAll(details['alternative_titles']);
         mainPic = details['main_picture']['medium'];
         synopsis = details['synopsis'];
         startDate = details['start_date'];
@@ -67,7 +69,7 @@ class _AnimeDetailState extends State<AnimeDetail> {
           title: Text(widget.animeName),
         ),
         body: isLoading
-            ? const CircularProgressIndicator()
+            ? Center(child: CircularProgressIndicator())
             : Column(
                 children: [
                   Row(
@@ -84,20 +86,40 @@ class _AnimeDetailState extends State<AnimeDetail> {
                       ),
                       Flexible(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: Text(
-                            widget.animeName,
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      widget.animeName,
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    child: Text(
+                                      "Alternative Names:\n\t"
+                                      "${altTitles['en']}\n\t"
+                                      "${altTitles['ja']}",
+                                      textAlign: TextAlign.start,
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  )
+                                ])),
                       ),
-                      Flexible(
-                        child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10),
-                            child: Text(
-                                "Alternative Names:\n  ${details['alternative_titles']['en']}\n  ${details['alternative_titles']['jp']}")),
-                      ),
+                      // Flexible(
+                      //   child: Padding(
+                      //       padding: EdgeInsets.symmetric(vertical: 10),
+                      //       child: Text(
+                      //           "Alternative Names:\n  ${details['alternative_titles']['en']}\n  ${details['alternative_titles']['jp']}")),
+                      // ),
                     ],
                   )
                 ],
