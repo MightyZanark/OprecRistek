@@ -1,16 +1,11 @@
-# oprec_ristek
+# Tugas Khusus Mobile Development RISTEK 2023
 
-A new Flutter project.
+Aplikasi ini akan menampilkan list anime yang sedang airing sekarang dari urutan paling pertama berdasarkan [API MyAnimeList](https://myanimelist.net/apiconfig/references/api/v2).
+Saat gambar salah satu anime di pencet, akan muncul detail page yang berisikan `gambar anime` itu lagi, `judul` langsung dari MyAnimeList, `judul alternative` dalam Bahasa Inggris dan Jepang jika ada, `Score` anime tersebut yang berasal dari rating user, `Rank` yang merupakan peringkat anime tersebut secara keseluruhan, `Synopsis` dari anime tersebut, `Genre` anime, dan juga `Studio` yang bersangkutan.
 
-## Getting Started
+Selain detail anime, ada juga `Profile Page` yang berisikan data diri saya. `Profile Page` ini bisa dicapai melalui tombol garis 3 yang berada di pojok kanan atas aplikasi.
 
-This project is a starting point for a Flutter application.
+## Package Used
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Selain dari package standard dari `Flutter` dan `dart`, package lain yang saya gunakan adalah:
+- [http](https://pub.dev/packages/http)
